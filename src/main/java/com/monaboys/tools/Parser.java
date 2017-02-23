@@ -48,10 +48,10 @@ public class Parser {
     }
     
     private String getHeadToWrite(/*, la chose à serialiser */) {
-        
+        return null;
     }
     
     private String getContentToWrite(/*, la chose à serialiser */) {
-        
+        return null;
     }
 }

@@ -2,6 +2,8 @@ package com.monaboys.tools;
 
 import com.monaboys.entity.*;
 
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,33 +13,30 @@ import java.util.stream.Collectors;
 public class Scoring {
 
 
-    public int chooseBestWay(Request request, Set<CacheServer> caches) {
+    public static Set<EndpointCacheServer> chooseBestWay(Request request, Set<CacheServer> caches) {
         Set<CacheServer> cacheServers = containsVideo(caches, request.getVideo());
-        cacheServers = isConnected(cacheServers, request.getEndpoint());
+        return cacheServers
+                .stream()
+                .map(cacheServer -> connectedEndPointCacheServer(cacheServer, request.getEndpoint()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
     }
 
-    private Set<CacheServer> containsVideo(Set<CacheServer> cacheServers, Video video) {
+    public static Set<CacheServer> containsVideo(Set<CacheServer> cacheServers, Video video) {
         return cacheServers.stream()
                 .filter(cache -> cache.getVideos().containsValue(video))
                 .collect(Collectors.toSet());
     }
 
-    private EndpointCacheServer connectedEndPointCacheServer(Set<CacheServer> cacheServers, Endpoint endpoint) {
-        for (CacheServer cacheServer : cacheServers) {
-            for (EndpointCacheServer endpointCacheServer : cacheServer.getEndpointsCacheServers()) {
-                if (endpointCacheServer.getEndpoint().equals(endpoint)) {
-                    return endpointCacheServer;
-                }
+    public static EndpointCacheServer connectedEndPointCacheServer(CacheServer cacheServer, Endpoint endpoint) {
+        Map<Integer, EndpointCacheServer> endpointsCacheServers = cacheServer.getEndpointsCacheServers();
+        int size = endpointsCacheServers.size();
+        for (int i = 0; i < size; i++) {
+            EndpointCacheServer endpointCacheServer = endpointsCacheServers.get(i);
+            if (endpointCacheServer.getEndpoint().equals(endpoint)){
+                return endpointCacheServer;
             }
         }
         return null;
-    }
-
-    private boolean containsEndPoint(Endpoint endpoint, CacheServer cacheServer) {
-        return cacheServer.getEndpointsCacheServers()
-                .stream()
-                .anyMatch(
-                        endpointCacheServer -> endpointCacheServer.getEndpoint().equals(endpoint)
-                );
     }
 }
