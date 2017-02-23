@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.monaboys.entity.CacheServer;
+import com.monaboys.entity.Endpoint;
+import com.monaboys.entity.Request;
 import com.monaboys.entity.Video;
 
 /**
@@ -26,7 +28,8 @@ public class Parser {
         
         createVideoLine(lines, statement);
         createCacheServer(lines, statement);
-//        createEndpoint(lines, statement);
+        createEndpoint(lines, statement);
+        createRequest(lines, statement);
         
         return statement;
     }
@@ -66,29 +69,57 @@ public class Parser {
             statement.getCacheServers().put(id, new CacheServer(id, statement.getHeadLine().getCacheSize()));
         }
     }
-
-//    private void createEndpoint(List<String> lines, Statement statement) {
-//        statement.setEndpoints(new HashMap<>());
-//        
-//        int idEnpoint = 0;
-//        int cacheNumber = Integer.parseInt(lines.get(2).split(" ")[1]);
-//        
-//        for (int lineNumber = 2; lineNumber < lines.size(); lineNumber++) {
-//            String[] data = lines.get(lineNumber).split(" ");
-//            
-//            //Si size == 3 on passe dans les requestes
-//            if(data.length > 2) {
-//                break;
-//            }
-//            
-//            if(cacheNumber == 0) {
-//                Endpoint endpoint = new Endpoint(idEnpoint, Integer.parseInt(data[0]));
-//                cacheNumber = Integer.parseInt(data[1]);
-//            } else {
-//                
-//            }
-//            
-//            statement.getEndpoints().put()
-//        }
-//    }
+    
+    private void createEndpoint(List<String> lines, Statement statement) {
+        statement.setEndpoints(new HashMap<>());
+        
+        int idEndpoint = 0;
+        int cacheNumber = Integer.parseInt(lines.get(2).split(" ")[1]);
+        Endpoint endpoint = new Endpoint(idEndpoint, Integer.parseInt(lines.get(2).split(" ")[0]));
+        
+        for (int lineNumber = 2; lineNumber < lines.size(); lineNumber++) {
+            String[] data = lines.get(lineNumber).split(" ");
+            
+            if (cacheNumber == 0) {
+                //On crée l'endpoint
+                cacheNumber = Integer.parseInt(data[1]);
+                endpoint = new Endpoint(idEndpoint, Integer.parseInt(data[0]));
+            } else {
+                
+                //On lie le précédent a un cache server
+                endpoint.addEnpointCacheServer(statement.getCacheServers().get(Integer.parseInt(data[0])),
+                        Integer.parseInt(data[1]));
+                
+                cacheNumber--;
+                if (cacheNumber == 0) {
+                    statement.getEndpoints().put(idEndpoint, endpoint);
+                    
+                    if (statement.getEndpoints().size() == statement.getHeadLine().getNbEndpoint()) {
+                        break;
+                    }
+                    
+                    idEndpoint++;
+                }
+            }
+        }
+    }
+    
+    private void createRequest(List<String> lines, Statement statement) {
+        statement.setRequests(new HashMap<>());
+        
+        int idRequest = 0;
+        for (int lineNumber = 2; lineNumber < lines.size(); lineNumber++) {
+            String[] data = lines.get(lineNumber).split(" ");
+            
+            if (data.length == 3) {
+                statement.getRequests().put(idRequest, new Request(
+                        idRequest,
+                        Integer.parseInt(data[2]),
+                        statement.getEndpoints().get(Integer.parseInt(data[1])),
+                        statement.getVideos().get(Integer.parseInt(data[0]))));
+            }
+            
+            idRequest++;
+        }
+    }
 }
