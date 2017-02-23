@@ -1,10 +1,12 @@
 package com.monaboys.entity;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by lpetit on 23/02/2017.
@@ -32,5 +34,11 @@ public class CacheServer extends Base {
         EndpointCacheServer ecs = new EndpointCacheServer(endpoint, this, latency);
         endpointsCacheServers.put(endpoint.getId(), ecs);
         endpoint.getEndpointsCacheServers().put(getId(), ecs);
+    }
+
+    private Set<CacheServer> containsVideo(Set<CacheServer> cacheServers, Video video) {
+        return cacheServers.stream()
+                .filter(cache -> cache.getVideos().containsValue(video))
+                .collect(Collectors.toSet());
     }
 }
