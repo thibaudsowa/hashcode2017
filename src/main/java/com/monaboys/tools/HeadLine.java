@@ -16,4 +16,23 @@ public class HeadLine {
     int nbCache;
     int cacheSize;
     
+    public int getNbVideo() {
+        return nbVideo;
+    }
+    
+    public int getNbEndpoint() {
+        return nbEndpoint;
+    }
+    
+    public int getNbRequest() {
+        return nbRequest;
+    }
+    
+    public int getNbCache() {
+        return nbCache;
+    }
+    
+    public int getCacheSize() {
+        return cacheSize;
+    }
 }
