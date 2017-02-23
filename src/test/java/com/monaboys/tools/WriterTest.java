@@ -6,51 +6,25 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
 import org.junit.Test;
 
+import com.monaboys.Factory;
 import com.monaboys.entity.CacheServer;
-import com.monaboys.entity.Video;
 
 /**
  * Created by lpetit on 23/02/2017.
  */
 public class WriterTest {
     
-    final static int MAX_CAPACITY = 1000;
-    
     @Test
     public void itShouldWriteFile()
             throws IOException {
         //  GIVEN
         String filename = "C:/TEMP/hashcode2017.out";
-        Video v0 = new Video(0, 10);
-        Video v1 = new Video(1, 100);
-        Video v2 = new Video(2, 1000);
-        Collection<CacheServer> cacheServers = new ArrayList<CacheServer>(){{
-            add(new CacheServer(0, MAX_CAPACITY){{
-                setVideos(new HashMap<Integer, Video>(){{
-                    put(v0.getId(), v0);
-                }});
-            }});
-            add(new CacheServer(1, MAX_CAPACITY){{
-                setVideos(new HashMap<Integer, Video>(){{
-                    put(v0.getId(), v0);
-                    put(v1.getId(), v1);
-                }});
-            }});
-            add(new CacheServer(2, MAX_CAPACITY){{
-                setVideos(new HashMap<Integer, Video>(){{
-                    put(v0.getId(), v0);
-                    put(v1.getId(), v1);
-                    put(v2.getId(), v2);
-                }});
-            }});
-        }};
+        Collection<CacheServer> cacheServers = Factory.createCacheServers();
         
         //  WHEN
         Writer writer = new Writer();
