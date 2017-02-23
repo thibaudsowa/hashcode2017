@@ -23,10 +23,12 @@ public class FileHelper {
         Files.createDirectories(Paths.get(getOuputFolderPath()));
     }
     
-    public static String getOutputFilename(){
+    public static String getOutputFilename(String input){
         return new StringBuilder()
                 .append(getOuputFolderPath())
                 .append("\\")
+                .append(input)
+                .append("_")
                 .append(DATE_FORMAT.format(new Date()))
                 .append(".out")
                 .toString();

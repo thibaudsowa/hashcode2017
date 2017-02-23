@@ -11,7 +11,7 @@ import com.monaboys.entity.Video;
  */
 public class RandomSolver {
     
-    public Collection<CacheServer> solve(Map<Integer, CacheServer> cacheServers, Map<Integer, Video> videos){
+    public static Collection<CacheServer> solve(Map<Integer, CacheServer> cacheServers, Map<Integer, Video> videos){
         for(Video video : videos.values()){
             int nbCacheServer =(int)(Math.random() * (cacheServers.size() / 2));
             for(int i = 0; i<nbCacheServer; i++){
@@ -25,7 +25,7 @@ public class RandomSolver {
         return cacheServers.values();
     }
     
-    private int getCacheServerSpace(CacheServer cacheServer){
+    private static int getCacheServerSpace(CacheServer cacheServer){
         int videoSpace = 0;
         for(Video video : cacheServer.getVideos().values()){
             videoSpace += video.getSize();

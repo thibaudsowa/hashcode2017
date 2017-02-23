@@ -20,6 +20,7 @@ public class Video extends Base {
         super(id);
         this.size = size;
         this.requests = new HashMap<>();
+        this.cacheServers = new HashMap<>();
     }
     
     public void addCacheServer(CacheServer cacheServer){
