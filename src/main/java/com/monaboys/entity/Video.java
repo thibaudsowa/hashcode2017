@@ -1,7 +1,7 @@
 package com.monaboys.entity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,12 +13,17 @@ import lombok.Setter;
 @Setter
 public class Video extends Base {
     int size;
-    Set<Request> requests;
-    Set<CacheServer> cacheServers;
+    Map<Integer, Request> requests;
+    Map<Integer, CacheServer> cacheServers;
     
     public Video(int id, int size) {
         super(id);
         this.size = size;
-        this.requests = new HashSet<>();
+        this.requests = new HashMap<>();
+    }
+    
+    public void addCacheServer(CacheServer cacheServer){
+        cacheServers.put(cacheServer.getId(), cacheServer);
+        cacheServer.getVideos().put(getId(), this);
     }
 }

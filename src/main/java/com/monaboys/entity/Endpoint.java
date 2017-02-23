@@ -1,7 +1,7 @@
 package com.monaboys.entity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,13 +13,19 @@ import lombok.Setter;
 @Setter
 public class Endpoint extends Base {
     int datacenterLatency;
-    Set<Request> requests;
-    Set<EndpointCacheServer> endpointsCacheServers;
+    Map<Integer, Request> requests;
+    Map<Integer, EndpointCacheServer> endpointsCacheServers;
     
     public Endpoint(int id, int datacenterLatency) {
         super(id);
         this.datacenterLatency = datacenterLatency;
-        this.requests = new HashSet<>();
-        this.endpointsCacheServers = new HashSet<>();
+        this.requests = new HashMap<>();
+        this.endpointsCacheServers = new HashMap<>();
+    }
+    
+    public void addEnpointCacheServer(CacheServer cacheServer, int latency){
+        EndpointCacheServer ecs = new EndpointCacheServer(this, cacheServer, latency);
+        endpointsCacheServers.put(cacheServer.getId(), ecs);
+        cacheServer.getEndpointsCacheServers().put(getId(), ecs);
     }
 }
