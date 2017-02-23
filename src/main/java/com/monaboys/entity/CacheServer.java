@@ -5,8 +5,6 @@ import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Created by lpetit on 23/02/2017.
@@ -36,9 +34,4 @@ public class CacheServer extends Base {
         endpoint.getEndpointsCacheServers().put(getId(), ecs);
     }
 
-    private Set<CacheServer> containsVideo(Set<CacheServer> cacheServers, Video video) {
-        return cacheServers.stream()
-                .filter(cache -> cache.getVideos().containsValue(video))
-                .collect(Collectors.toSet());
-    }
 }
