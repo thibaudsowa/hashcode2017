@@ -16,10 +16,10 @@ import com.monaboys.entity.Video;
  */
 public class Parser {
     
-    public Statement read(String fileName)
+    public static Statement parse(String fileName)
             throws IOException {
         
-        List<String> lines = Files.readAllLines(Paths.get(fileName + ".in"));
+        List<String> lines = Files.readAllLines(Paths.get("input/" + fileName + ".in"));
         
         Statement statement = new Statement();
         
@@ -34,7 +34,7 @@ public class Parser {
         return statement;
     }
     
-    private void readHeadLine(List<String> lines, Statement statement) {
+    private static void readHeadLine(List<String> lines, Statement statement) {
         String[] data = lines.get(0).split(" ");
         
         HeadLine headline = new HeadLine();
@@ -47,8 +47,8 @@ public class Parser {
         statement.setHeadLine(headline);
     }
     
-    private void createVideoLine(List<String> lines, Statement statement) {
-        String[] data = lines.get(0).split(" ");
+    private static void createVideoLine(List<String> lines, Statement statement) {
+        String[] data = lines.get(1).split(" ");
         
         statement.setVideos(new HashMap<>());
         
@@ -62,7 +62,7 @@ public class Parser {
         }
     }
     
-    private void createCacheServer(List<String> lines, Statement statement) {
+    private static void createCacheServer(List<String> lines, Statement statement) {
         statement.setCacheServers(new HashMap<>());
         
         for (int id = 0; id < statement.getHeadLine().getNbCache(); id++) {
@@ -70,14 +70,14 @@ public class Parser {
         }
     }
     
-    private void createEndpoint(List<String> lines, Statement statement) {
+    private static void createEndpoint(List<String> lines, Statement statement) {
         statement.setEndpoints(new HashMap<>());
         
         int idEndpoint = 0;
         int cacheNumber = Integer.parseInt(lines.get(2).split(" ")[1]);
         Endpoint endpoint = new Endpoint(idEndpoint, Integer.parseInt(lines.get(2).split(" ")[0]));
         
-        for (int lineNumber = 2; lineNumber < lines.size(); lineNumber++) {
+        for (int lineNumber = 3; lineNumber < lines.size(); lineNumber++) {
             String[] data = lines.get(lineNumber).split(" ");
             
             if (cacheNumber == 0) {
@@ -104,7 +104,7 @@ public class Parser {
         }
     }
     
-    private void createRequest(List<String> lines, Statement statement) {
+    private static void createRequest(List<String> lines, Statement statement) {
         statement.setRequests(new HashMap<>());
         
         int idRequest = 0;
