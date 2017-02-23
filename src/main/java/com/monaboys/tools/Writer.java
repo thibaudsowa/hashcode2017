@@ -18,7 +18,13 @@ public class Writer {
     public void write(String fileName, Collection<CacheServer> cacheServers) {
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter(fileName, "UTF-8");
+            writer = new PrintWriter(fileName, "UTF-8"){
+                //  UNIX FORMAT
+                @Override
+                public void println() {
+                    write("\n");
+                }
+            };
             write(writer, cacheServers);
         } 
         catch (IOException e) {
@@ -53,7 +59,7 @@ public class Writer {
     }
     
     private String getLine(CacheServer cacheServer){
-        StringBuilder sb = new StringBuilder(cacheServer.getId());
+        StringBuilder sb = new StringBuilder().append(cacheServer.getId());
         for(Video video : cacheServer.getVideos().values()){
             sb.append(SEPARATOR).append(video.getId());
         }
